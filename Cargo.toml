@@ -1,0 +1,9 @@
+[workspace]
+
+members = [
+    "runner",
+    "shader-rust"
+]
+
+[workspace.dependencies]
+spirv-std = "0.7.0"
