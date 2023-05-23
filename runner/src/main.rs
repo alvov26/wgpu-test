@@ -6,6 +6,13 @@ use winit::{
     window::WindowBuilder, dpi::PhysicalSize,
 };
 
+enum ShaderType {
+    WGSL,
+    RUST
+}
+
+const SHADER_TYPE: ShaderType = ShaderType::RUST;
+
 fn main() {
     env_logger::init();
     let event_loop = EventLoop::new();
@@ -46,7 +53,10 @@ fn main() {
     surface.configure(&device, &surface_config);
 
     let shader2 = device.create_shader_module(wgpu::include_wgsl!("../../shader.wgsl"));
-    let shader = device.create_shader_module(wgpu::include_spirv!(env!("shader_rust.spv")));
+    let shader = match SHADER_TYPE {
+        ShaderType::WGSL => device.create_shader_module(wgpu::include_wgsl!("../../shader.wgsl")),
+        ShaderType::RUST => device.create_shader_module(wgpu::include_spirv!(env!("shader_rust.spv")))
+    };
 
     let bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
         label: None,
